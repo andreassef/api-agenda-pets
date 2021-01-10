@@ -1,14 +1,18 @@
+const moment = require('moment')
 const conexao = require('../infra/conexao')
 
 class Atendimento {
-    adiciona(atendimento){
+    async adiciona(atendimento){
         const sql = 'INSERT INTO Atendimentos SET ?'
+        const dataCriacao = moment().format('YYYY-MM-DD HH:MM:SS')
+        const data = moment(atendimento.data, 'DD/MM/YYYY').format('YYYY-MM-DD HH:MM:SS')
+        const atendimentoDatado = {...atendimento, dataCriacao, data}
 
-        conexao.query(sql, atendimento, (erro, resultado) => {
+        await conexao.query(sql, atendimentoDatado, (erro, resultado) => {
             if(erro) {
-                console.log(erro)
+                return erro
             }else {
-                console.log(resultado)
+                return resultado
             }
         })
     }
